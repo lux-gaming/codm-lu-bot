@@ -2,7 +2,10 @@
 const {stripIndent} = require('common-tags')
 
 // stores API keys in separate JSON file
-const { prefix, token } = require('./config.json');
+const { prefix } = require('./config.json');
+
+// configure custom commands, etc.
+const { token } = require('./token.json');
 
 // require the discord.js module
 const Discord = require('discord.js');
