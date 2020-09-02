@@ -1,9 +1,12 @@
 {
-  "name": "bot",
+  "name": "codm-lu-bot",
   "version": "1.0.0",
   "description": "discord bot",
   "main": "index.js",
-  "scripts": {},
+  
+  "scripts": {
+    "start": "node bot.js"
+  },
   "author": "Nico Bachner",
   "license": "MIT",
   "dependencies": {
