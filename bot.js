@@ -19,15 +19,38 @@ bot.once('ready', () => {
 	console.log('Bot is live');
 });
 
+// new member welcome
+bot.on('guildMemberAdd', member => {
+	console.log(member)
+	member.guild.channels.cache.get('704743628572196927').send(stripIndent`
+	:wave: Welcome, <@${member.id}> to
+	--- **${member.guild.name}** ---
+
+	Don't forget to check out our ${member.guild.rulesChannel} channel and set your nickname to your CoDM player tag!
+	`); 
+});
+
+// interactive functionality
 bot.on('message', message => {
 	console.log(message.author.username, ":", message.content)
 
+	// for fun
+	if (message.content === 'happy') {
+		message.react('😄');
+	}
+
 	// simple info commands
-	if (message.content === 'server info') {
+	else if (message.content === 'server info') {
 		message.channel.send(stripIndent`
-			__*Server Info*__
-			Server Name: **${message.guild.name}**
-			Members: **${message.guild.memberCount}**
+			----- **${message.guild.name}** -----
+
+			Founded: ${message.guild.createdAt}
+			Region: ${message.guild.region}
+
+			Owner: ${message.guild.owner}
+			Members: ${message.guild.memberCount}
+
+			Rules: ${message.guild.rulesChannel}
 		`);
 	} 
 	else if (message.content === 'user info') {
@@ -36,7 +59,12 @@ bot.on('message', message => {
 
 	// easily delete multiple messages
 	else if (message.content === 'prune 5') {
+		if (message.member.roles.cache.has('745745452934103072')) {
 		message.channel.bulkDelete(6);
+		} 
+		else {
+			return message.reply(`${message.author.username}, you do not seem to be a moderator`)
+		}
 	}
 });
 
