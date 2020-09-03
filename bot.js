@@ -16,7 +16,9 @@ bot.login(token);
 // when the client is ready, run this code
 // this event will only trigger one time after logging in
 bot.once('ready', () => {
-	console.log('Bot is live');
+	console.log(stripIndent`
+	--- Bot is live ---
+	`);
 });
 
 // new member welcome
@@ -37,6 +39,9 @@ bot.on('message', message => {
 	// for fun
 	if (message.content === 'happy') {
 		message.react('😄');
+	}
+	if (message.content === 'sad') {
+		message.react('😢');
 	}
 
 	// simple info commands
