@@ -17,35 +17,37 @@ bot.login(token);
 // this event will only trigger one time after logging in
 bot.once('ready', () => {
 	console.log(stripIndent`
-	--- Bot is live ---
+	--- Bot online ---
 	`);
 });
 
 // new member welcome
 bot.on('guildMemberAdd', member => {
 	console.log(member)
-	member.guild.channels.cache.get('704743628572196927').send(stripIndent`
-	:wave: Welcome, <@${member.id}> to
-	--- **${member.guild.name}** ---
-
-	Don't forget to check out our ${member.guild.rulesChannel} channel and set your nickname to your CoDM player tag!
-	`); 
+	member.guild.channels.cache.get('704743628572196927').send(`:wave: Welcome, <@${member.id}> to **${member.guild.name}**\nDon't forget to check out our ${member.guild.rulesChannel} channel and set your nickname to your CoDM player tag!`); 
 });
 
 // interactive functionality
 bot.on('message', message => {
 	console.log(message.author.username, ":", message.content)
 
+	command = message.content.toLowerCase()
+	if (command == 'shut down bot') {
+		message.channel.send(`I will shut down now :sleeping:`);
+		console.log('--- Bot offline ---')
+		process.exit(1);
+	}
+
 	// for fun
-	if (message.content === 'happy') {
+	if (command == 'happy') {
 		message.react('😄');
 	}
-	if (message.content === 'sad') {
+	if (command == 'sad') {
 		message.react('😢');
 	}
 
 	// simple info commands
-	else if (message.content === 'server info') {
+	if (message.content == 'server info') {
 		message.channel.send(stripIndent`
 			----- **${message.guild.name}** -----
 
@@ -58,17 +60,17 @@ bot.on('message', message => {
 			Rules: ${message.guild.rulesChannel}
 		`);
 	} 
-	else if (message.content === 'user info') {
+	else if (message.content == 'user info') {
 		return message.reply(`your username is ${message.author.username} and your user ID is ${message.author.id}`);
 	} 
 
 	// easily delete multiple messages
-	else if (message.content === 'prune 5') {
+	if (message.content == 'prune 5') {
 		if (message.member.roles.cache.has('745745452934103072')) {
-		message.channel.bulkDelete(6);
+			message.channel.bulkDelete(6);
 		} 
 		else {
-			return message.reply(`${message.author.username}, you do not seem to be a moderator`)
+			return message.reply(`(${message.author.username}), only moderators are permitted to use this command`)
 		}
 	}
 });
