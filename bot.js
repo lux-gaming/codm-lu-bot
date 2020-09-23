@@ -32,11 +32,6 @@ bot.on('message', message => {
 	console.log(message.author.username, ":", message.content)
 
 	command = message.content.toLowerCase()
-	if (command == 'shut down bot') {
-		message.channel.send(`I will shut down now :sleeping:`);
-		console.log('--- Bot offline ---')
-		process.exit(1);
-	}
 
 	// for fun
 	if (command == 'happy') {
@@ -44,6 +39,66 @@ bot.on('message', message => {
 	}
 	if (command == 'sad') {
 		message.react('😢');
+	}
+
+
+	/*
+	Hello and welcome to **Call of Duty: Mobile Luxembourg**
+
+We're a community server for CoD:M players based in Luxembourg, but are also open to all other EU West players 
+
+**Invite link:** https://discord.gg/uuagJHE
+
+__General Information:__
+**Server Region:** Your CoDM Server Region should be Western Europe (EU West)
+**Time Zone:** Default time zone is CEST, when communicating time mention the time zone if it is any other.
+**Languages:** Primary language is Luxembourgish, but since we're all gamers, English is of course equally fine. French and German are welcome too.
+
+__Rules:__
+**Read the official discord rules and guidelines:** https://discordapp.com/guidelines
+**Naming:** Your name has to match your CoD:M player name (case-sensitive). If this is not the case, change your server nickname
+
+__Contributing:__
+**Join our Github organisation:** https://github.com/lux-gaming
+**Contribute to our homegrown bot:** https://github.com/lux-gaming/codm-lu-bot
+
+*/
+
+	// Reply with server welcome
+	if (command == 'server-welcome') {
+		const welcome = new Discord.MessageEmbed()
+			.setTitle('Hello and welcome to **Call of Duty: Mobile Luxembourg**')
+			.setDescription("We're a community server for CoD:M players based in Luxembourg, but are also open to all other EU West players")
+			.addFields(
+				{ name: '__Server Invite Link:__', value: '[https://discord.gg/uuagJHE](https://discord.gg/uuagJHE)' },
+				{ name: '__General Information:__', value: "**Server Region:** Your CoDM Server Region should be Western Europe (EU West)\n**Time Zone:** Default time zone is CEST, when communicating time mention the time zone if it is any other.\n**Languages:** Primary language is Luxembourgish, but since we're all gamers, English is of course equally fine. French and German are welcome too."},
+				{ name: '__Rules:__', value: '**Read the [official discord rules and guidelines](https://discordapp.com/guidelines)**\n**Naming:** Your name has to match your CoD:M player name (case-sensitive). If this is not the case, change your server nickname'},
+				{ name: '__Contributing:__', value: '**Join our [Github organisation](https://github.com/lux-gaming)**\n**Contribute to our [homegrown bot](https://github.com/lux-gaming/codm-lu-bot)**'},
+			)
+			.setTimestamp()
+		message.channel.send(welcome);
+	}
+
+	// Lists all affiliated servers
+	if (command == 'affiliate-servers') {
+		const codmservers = new Discord.MessageEmbed()
+			.setTitle('Official Call of Duty: Mobile Discord Servers')
+			.setDescription('Join our official codm partner servers')
+			.addFields(
+				{ name: 'Global Servers', value: '[TiMi](https://discord.gg/codm)\n[The Other](https://discord.gg/callofdutymobile)' },
+				{ name: 'EU Servers', value: '[:flag_lu: Luxembourg](https://discord.gg/uuagJHE)\n[:flag_de: Germany](https://discord.gg/JE65Bcf)\n[:flag_fr: France](https://discord.gg/SeQ6zmE)\n[:flag_it: Italy](https://discord.gg/g7yMEya)\n[:flag_es: Spain](https://discord.gg/EFcS6pn)'},
+			)
+			.setTimestamp()
+		message.channel.send(codmservers);
+
+		const luxservers = new Discord.MessageEmbed()
+			.setTitle('Cool Luxembourg Discord Servers')
+			.addFields(
+				{ name: 'Gaming', value: '[E-Sports.lu](https://discord.gg/GUNyB36)\n[Lux Gaming Corner](https://discord.gg/7SjtxVr)' },
+				{ name: 'Other', value: '[Gregorys shitty but sort of ok server](https://discord.gg/GEbmwVj)'},
+			)
+			.setTimestamp()
+		message.channel.send(luxservers);
 	}
 
 	// simple info commands
