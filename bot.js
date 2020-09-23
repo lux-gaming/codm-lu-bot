@@ -31,19 +31,18 @@ bot.on('guildMemberAdd', member => {
 bot.on('message', message => {
 	console.log(message.author.username, ":", message.content)
 	
-	const args = message.content.trim().split(' ');
-	const command = args.shift().toLowerCase();
+	const args = message.content.toLowerCase().trim().split(' ');
 
 	// for fun
-	if (command == 'happy') {
+	if (args[0] == 'happy') {
 		message.react('😄');
 	}
-	if (command == 'sad') {
+	if (args[0] == 'sad') {
 		message.react('😢');
 	}
 
 	// Reply with server welcome
-	if (command == 'server-welcome') {
+	if (args[0] == 'server-welcome') {
 		const welcome = new Discord.MessageEmbed()
 			.setTitle('Hello and welcome to **Call of Duty: Mobile Luxembourg**')
 			.setDescription("We're a community server for CoD:M players based in Luxembourg, but are also open to all other EU West players")
@@ -58,7 +57,7 @@ bot.on('message', message => {
 	}
 
 	// Lists all affiliated servers
-	if (command == 'affiliate-servers') {
+	if (args[0] == 'affiliate-servers') {
 		const codmservers = new Discord.MessageEmbed()
 			.setTitle('Official Call of Duty: Mobile Discord Servers')
 			.setDescription('Join our official codm partner servers')
@@ -80,7 +79,7 @@ bot.on('message', message => {
 	}
 
 	// simple info commands
-	if (command == 'server-info') {
+	if (args[0] == 'server-info') {
 		message.channel.send(stripIndent`
 			----- **${message.guild.name}** -----
 
@@ -93,14 +92,14 @@ bot.on('message', message => {
 			Rules: ${message.guild.rulesChannel}
 		`);
 	} 
-	else if (command == 'user-info') {
+	else if (args[0] == 'user-info') {
 		return message.reply(`your username is ${message.author.username} and your user ID is ${message.author.id}`);
 	} 
 
 	// easily delete multiple messages
-	if (command == 'prune') {
+	if (args[0] == 'prune') {
 		if (message.member.roles.cache.has('745745452934103072')) {
-			message.channel.bulkDelete(parseInt(args[0]) + 1);
+			message.channel.bulkDelete(parseInt(args[1]) + 1);
 		} 
 		else {
 			return message.reply(`(${message.author.username}), only moderators are permitted to use this command`)
