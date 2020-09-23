@@ -30,8 +30,9 @@ bot.on('guildMemberAdd', member => {
 // interactive functionality
 bot.on('message', message => {
 	console.log(message.author.username, ":", message.content)
-
-	command = message.content.toLowerCase()
+	
+	const args = message.content.trim().split(' ');
+	const command = args.shift().toLowerCase();
 
 	// for fun
 	if (command == 'happy') {
@@ -40,29 +41,6 @@ bot.on('message', message => {
 	if (command == 'sad') {
 		message.react('😢');
 	}
-
-
-	/*
-	Hello and welcome to **Call of Duty: Mobile Luxembourg**
-
-We're a community server for CoD:M players based in Luxembourg, but are also open to all other EU West players 
-
-**Invite link:** https://discord.gg/uuagJHE
-
-__General Information:__
-**Server Region:** Your CoDM Server Region should be Western Europe (EU West)
-**Time Zone:** Default time zone is CEST, when communicating time mention the time zone if it is any other.
-**Languages:** Primary language is Luxembourgish, but since we're all gamers, English is of course equally fine. French and German are welcome too.
-
-__Rules:__
-**Read the official discord rules and guidelines:** https://discordapp.com/guidelines
-**Naming:** Your name has to match your CoD:M player name (case-sensitive). If this is not the case, change your server nickname
-
-__Contributing:__
-**Join our Github organisation:** https://github.com/lux-gaming
-**Contribute to our homegrown bot:** https://github.com/lux-gaming/codm-lu-bot
-
-*/
 
 	// Reply with server welcome
 	if (command == 'server-welcome') {
@@ -102,7 +80,7 @@ __Contributing:__
 	}
 
 	// simple info commands
-	if (message.content == 'server info') {
+	if (command == 'server-info') {
 		message.channel.send(stripIndent`
 			----- **${message.guild.name}** -----
 
@@ -115,14 +93,14 @@ __Contributing:__
 			Rules: ${message.guild.rulesChannel}
 		`);
 	} 
-	else if (message.content == 'user info') {
+	else if (command == 'user-info') {
 		return message.reply(`your username is ${message.author.username} and your user ID is ${message.author.id}`);
 	} 
 
 	// easily delete multiple messages
-	if (message.content == 'prune 5') {
+	if (command == 'prune') {
 		if (message.member.roles.cache.has('745745452934103072')) {
-			message.channel.bulkDelete(6);
+			message.channel.bulkDelete(parseInt(args[0]) + 1);
 		} 
 		else {
 			return message.reply(`(${message.author.username}), only moderators are permitted to use this command`)
