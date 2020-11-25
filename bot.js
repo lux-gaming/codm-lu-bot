@@ -1,104 +1,88 @@
-// formatting
-const { stripIndent } = require('common-tags')
+const { roles, channels } = require('./config.json');
 
-// stores API keys in separate JSON file
-const { token } = require('./token.json');
-
-// require the discord.js module
+// create a new Discord bot session
 const Discord = require('discord.js');
-
-// create a new Discord client
 const bot = new Discord.Client();
+const { auth_token } = require('./auth_token.json');
+bot.login(auth_token);
 
-// auth
-bot.login(token);
-
-// when the client is ready, run this code
-// this event will only trigger one time after logging in
-bot.once('ready', () => {
-	console.log(stripIndent`
-	--- Bot online ---
-	`);
+// this event will only trigger once: on bot init
+bot.on('ready', () => {
+	console.log("--- Bot online ---");
+	const args = process.argv.slice(2);
+	if (args[0] == "announce") {
+		bot.channels.cache.get(channels.bots).send("Hello there! I'm back online");
+	}
 });
 
 // new member welcome
 bot.on('guildMemberAdd', member => {
-	console.log(member)
-	member.guild.channels.cache.get('704743628572196927').send(`:wave: Welcome, <@${member.id}> to **${member.guild.name}**\nDon't forget to check out our ${member.guild.rulesChannel} channel and set your nickname to your CoDM player tag!`); 
+	console.log(`${member} joined the server`)
+	member.guild.channels.cache.get(channels.welcome).send(`:wave: Welcome, <@${member.id}> to **${member.guild.name}** :wave:`); 
 });
 
 // interactive functionality
 bot.on('message', message => {
-	console.log(message.author.username, ":", message.content)
+	// for tesing only: console.log(message.author.username, ":", message.content)
 	
-	const args = message.content.toLowerCase().trim().split(' ');
+	const command = message.content.toLowerCase().trim()
+	const args = command.split(' ');
 
 	// for fun
-	if (args[0] == 'happy') {
+	if (command == 'happy') {
 		message.react('😄');
 	}
-	if (args[0] == 'sad') {
+	if (command == 'sad') {
 		message.react('😢');
 	}
 
+	// counting
+	if (args[0] == 'count') {
+		if (isNaN(args[1])) {
+			message.channel.send("How far would you like me to count?"); 
+		}
+		else {
+			for ( var i = 1 ; i <= args[1] ; i++ ) {
+				message.channel.send(i);
+			}
+		}
+	}
+
 	// Reply with server welcome
-	if (args[0] == 'server-welcome') {
+	if (command == 'server welcome') {
 		const welcome = new Discord.MessageEmbed()
-			.setTitle('Hello and welcome to **Call of Duty: Mobile Luxembourg**')
-			.setDescription("We're a community server for CoD:M players based in Luxembourg, but are also open to all other EU West players")
+			.setTitle(`Hello and welcome to the **${message.guild.name}**`)
+			.setDescription("We're a community of devs")
 			.addFields(
-				{ name: '__Server Invite Link:__', value: '[https://discord.gg/uuagJHE](https://discord.gg/uuagJHE)' },
-				{ name: '__General Information:__', value: "**Server Region:** Your CoDM Server Region should be Western Europe (EU West)\n**Time Zone:** Default time zone is CEST, when communicating time mention the time zone if it is any other.\n**Languages:** Primary language is Luxembourgish, but since we're all gamers, English is of course equally fine. French and German are welcome too."},
-				{ name: '__Rules:__', value: '**Read the [official discord rules and guidelines](https://discordapp.com/guidelines)**\n**Naming:** Your name has to match your CoD:M player name (case-sensitive). If this is not the case, change your server nickname'},
-				{ name: '__Contributing:__', value: '**Join our [Github organisation](https://github.com/lux-gaming)**\n**Contribute to our [homegrown bot](https://github.com/lux-gaming/codm-lu-bot)**'},
+				{ name: 'Server Invite Link', value: '[https://discord.gg/https://discord.gg/DKKkJYj8hu](https://discord.gg/https://discord.gg/DKKkJYj8hu)' },
+				{ name: 'Rules', value: '**Read the [official discord rules and guidelines](https://discordapp.com/guidelines)**'},
+				{ name: 'Contributing', value: '**Contribute to our [homegrown bot](https://github.com/nico-bachner/dev-bot)**'}
 			)
 			.setTimestamp()
 		message.channel.send(welcome);
 	}
 
-	// Lists all affiliated servers
-	if (args[0] == 'affiliate-servers') {
-		const codmservers = new Discord.MessageEmbed()
-			.setTitle('Official Call of Duty: Mobile Discord Servers')
-			.setDescription('Join our official codm partner servers')
-			.addFields(
-				{ name: 'Global Servers', value: '[TiMi](https://discord.gg/codm)\n[The Other](https://discord.gg/callofdutymobile)' },
-				{ name: 'EU Servers', value: '[:flag_lu: Luxembourg](https://discord.gg/uuagJHE)\n[:flag_de: Germany](https://discord.gg/JE65Bcf)\n[:flag_fr: France](https://discord.gg/SeQ6zmE)\n[:flag_it: Italy](https://discord.gg/g7yMEya)\n[:flag_es: Spain](https://discord.gg/EFcS6pn)'},
-			)
-			.setTimestamp()
-		message.channel.send(codmservers);
-
-		const luxservers = new Discord.MessageEmbed()
-			.setTitle('Cool Luxembourg Discord Servers')
-			.addFields(
-				{ name: 'Gaming', value: '[E-Sports.lu](https://discord.gg/GUNyB36)\n[Lux Gaming Corner](https://discord.gg/7SjtxVr)' },
-				{ name: 'Other', value: '[Gregorys shitty but sort of ok server](https://discord.gg/GEbmwVj)'},
-			)
-			.setTimestamp()
-		message.channel.send(luxservers);
-	}
-
 	// simple info commands
-	if (args[0] == 'server-info') {
-		message.channel.send(stripIndent`
-			----- **${message.guild.name}** -----
-
-			Founded: ${message.guild.createdAt}
-			Region: ${message.guild.region}
-
-			Owner: ${message.guild.owner}
-			Members: ${message.guild.memberCount}
-
-			Rules: ${message.guild.rulesChannel}
-		`);
+	if (command == 'server info') {
+		message.channel.send(new Discord.MessageEmbed()
+			.setTitle(`**${message.guild.name}**`)
+			.addFields(
+				{ name: 'Founded', value: message.guild.createdAt },
+				{ name: 'Region', value: message.guild.region },
+				{ name: 'Owner', value: message.guild.owner },
+				{ name: 'Members', value: message.guild.memberCount },
+				{ name: 'Rules', value: message.guild.rulesChannel }
+			)
+			.setTimestamp()
+		);
 	} 
-	else if (args[0] == 'user-info') {
+	else if (command == 'user info') {
 		return message.reply(`your username is ${message.author.username} and your user ID is ${message.author.id}`);
 	} 
 
 	// easily delete multiple messages
 	if (args[0] == 'prune') {
-		if (message.member.roles.cache.has('745745452934103072')) {
+		if (message.member.roles.cache.has(roles.moderator)) {
 			message.channel.bulkDelete(parseInt(args[1]) + 1);
 		} 
 		else {
