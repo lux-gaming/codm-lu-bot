@@ -1,15 +1,16 @@
-# *Call of Duty: Mobile Luxembourg* Discord Bot
+# Dev Bot
 
-Custom Discord Bot for the **Call of Duty: Mobile Luxembourg** Discord Server \
-Used primarily for experimentation / learning and for fun
+Custom Discord Bot for experimentation, learning and fun.
 
 ## Hosting the bot
 The bot is currently not doing anything because it is not actively hosted.
 
-If you wish to host the bot, you are welcome to open an issue with your contact info and a team member will send you the discord auth token. From there on, simply clone this github repository and add `token.json`:
-``` json
-// token.json
-{
-  "token": "PASTE_TOKEN_HERE"
-}
-```
+If you wish to run the bot, follow these steps:
+1. Clone this github repository
+2. Install npm dependencies (`npm i`)
+3. Add your bot auth token in `.env`:
+    ``` js
+    // .env
+    AUTH_TOKEN=gnd87hmp45hs5qyss4p2p87s2mppgsp2gs4p2a7gfmp 
+    // obviously, this is not a valid token - replace it with your own
+    ```
